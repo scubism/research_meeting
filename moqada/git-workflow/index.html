@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ja">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>エスケー's Git</title>
+
+    <meta name="description" content="An easy to use CSS 3D slideshow tool for quickly creating good looking HTML presentations.">
+    <meta name="author" content="Hakim El Hattab">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<link rel="stylesheet" href="reveal-js/css/reveal.css">
+		<link rel="stylesheet" href="reveal-js/css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="reveal-js/lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="reveal-js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="reveal-js/lib/js/html5shiv.js"></script>
+		<![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Used to fade in a background when a specific slide state is reached -->
+      <div class="state-background"></div>
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+        <h1>エスケーのGit開発フロー</h1>
+        <p>2012年10月25日</p>
+        <p>エンジニア勉強会</p>
+        </section>
+
+        <section>
+        <h2>基本的な方針</h2>
+        <ul>
+          <li>git-dailyにのっかる</li>
+          <li>MergeRequest(ゆるふわ)</li>
+          <li>デザイナリリース</li>
+        </ul>
+        </section>
+
+        <section>
+        <h1>git-dailyにのっかる</h1>
+        </section>
+
+        <section>
+        <h1>git-daily?</h1>
+        </section>
+
+        <section>
+        <h2>git-daily？</h2>
+        <ul>
+          <li><a target="_blank" href="http://labs.gree.jp/blog/2011/05/3528/">Git で日々の共同作業やリリース作業をサポートする git-daily を作りました | GREE Engineers' Blog</a></li>
+          <li><a target="_blank" href="http://d.hatena.ne.jp/sotarok/20111015/pyfes_git_daily">#pyfes で git-daily について話してきました - 肉とご飯と甘いもの @ sotarok</a></li>
+        </ul>
+        </section>
+
+        <section>
+        <h2>git-daily</h2>
+        <p>ひとことで言うと…</p>
+        <h3>git-flowのWeb開発特化版</h3>
+        </section>
+
+        <section>
+        <h1>git-flow??</h1>
+        </section>
+
+        <section>
+        <h2>git-flow</h2>
+        <p>ひとことで言うと…</p>
+        <h3>A successful Git branching model を補助するGit wrapper tool</h3>
+        </section>
+
+        <section>
+        <h1>Git wrapper tool???</h1>
+        </section>
+
+        <section>
+        <h2>Git wrapper tool</h2>
+        <ul>
+          <li>Gitラッパツール == サブコマンドとかエイリアスとも言う</li>
+          <li>パスの通ったところに git-* な実行ファイルを設置すれば勝手に認識してくれる</li>
+        </ul>
+        </section>
+
+        <section>
+        <h2>git-daily, git-flow以外にも様々なwrapper toolがある</h2>
+        <ul>
+          <li><a target="_blank" href="">git-ticket</a></li>
+          <ul>
+            <li>Redmineと連携</li>
+          </ul>
+          <li><a target="_blank" href="">git-hook</a></li>
+          <ul>
+            <li>hookをgistなどから任意のイベントに簡単設定</li>
+          </ul>
+          <li><a target="_blank" href="">git-now</a></li>
+          <ul>
+            <li>テンポラリのコミットを大量に作成してあとでまとめる手法を補助</li>
+          </ul>
+          <li><a target="_blank" href="">git-助けて</a></li>
+          <ul>
+            <li>「git 助けて」で状況にあったコマンドが出てくる</li>
+          </ul>
+          <li><a target="_blank" href="">git-balse</a></li>
+          <ul>
+            <li>コミットメッセージにバルスが含まれていると可能な限りリポジトリを破壊</li>
+          </ul>
+        </ul>
+        </section>
+
+        <section>
+        <h1>で</h1>
+        </section>
+
+        <section>
+        <h1>A successful Git branching model????</h1>
+        </section>
+
+        <section>
+        <h2>A successful Git branching model</h2>
+        <p>ひとことで言うと…</p>
+        <h3>成功したGitのブランチ運用モデル(直訳)</h3>
+        <p>自由すぎるGitのブランチに規則を設けていい感じに開発できるようにする…</p>
+        </section>
+
+        <section>
+        <h2>ブランチ運用モデル</h2>
+        <ul>
+          <li>master</li>
+          <ul>
+            <li>リリースされている最新のソースコード</li>
+          </ul>
+          <li>develop</li>
+          <ul>
+            <li>開発用ブランチ</li>
+          </ul>
+          <li>feature/xxxx</li>
+          <ul>
+            <li>特定機能xxx用ブランチ</li>
+          </ul>
+          <li>release/yyyy</li>
+          <ul>
+            <li>yyyyリリース用ブランチ</li>
+          </ul>
+          <li>hotfix/zzzz</li>
+          <ul>
+            <li>masterブランチの緊急修正用ブランチ</li>
+          </ul>
+        </ul>
+        </section>
+
+        <section>
+        <h1>ただ</h1>
+        </section>
+
+        <section>
+        <h2>git-flowはWeb開発に向いていない</h2>
+        <ul>
+          <li>リリース頻度が多い</li>
+          <ul>
+            <li>リリースにいちいち名前つけてらんない</li>
+            <li>タグいらない</li>
+          </ul>
+          <li>リモート連携してくれない</li>
+          <ul>
+            <li>ローカルブランチをうまいことやってくれるだけ</li>
+            <li>共同開発ではリモートのほうもうまくやってほしい</li>
+          </ul>
+        </ul>
+        </section>
+
+        <section>
+        <h1>そこで</h1>
+        </section>
+
+        <section>
+        <h1>git-daily</h1>
+        </section>
+
+        <section>
+        <h2>git-dailyの特徴</h2>
+        <ul>
+          <li>releaseに日付で自動的に名前づけ</li>
+          <li>タグを切らない</li>
+          <li>適当にリモートと連携</li>
+        </ul>
+        </section>
+
+        <section>
+        <h2>コマンド例</h2>
+        <pre><code>git daily release open</code></pre>
+        <ul>
+          <li>release/yyyy-mmdd-hhMMを自動生成</li>
+          <li>ブランチ作成後、リモートにpush</li>
+        </ul>
+        </section>
+
+        <section>
+        <h2>コマンド例</h2>
+        <pre><code>git daily release close</code></pre>
+        <ul>
+          <li>リリースブランチをmasterにmerge</li>
+          <li>masterブランチのpush</li>
+          <li>リリースブランチをdeveloopにmerge</li>
+          <li>developブランチのpush</li>
+          <li>remoteのリリースブランチの削除</li>
+          <li>localからも削除</li>
+        </ul>
+        </section>
+
+        <section>
+        <h1>とりあえず</h1>
+        </section>
+
+        <section>
+        <h2>git-dailyは</h2>
+        <ul>
+          <li>複雑な手順を簡略化してくれるし</li>
+          <li>リモート側もいい感じに整理してくれるし</li>
+          <li>色々楽</li>
+        </ul>
+        </section>
+
+        <section>
+        <h2>SKでインスパイヤしたところ</h2>
+        <ul>
+          <li>developがメイン開発ブランチ</li>
+          <li>大きな機能を開発するときはfeatureを切る</li>
+          <li>リリース時にはreleaseブランチを切る</li>
+        </ul>
+        <p>以上のルールにのっかりさえしてればOK</p>
+        <p>あとはリモートとの連携も便利コマンドが全部やってくれるので楽</p>
+        </section>
+
+        <section>
+        <h2>SKで独自のところ</h2>
+        <ul>
+          <li>各自 working/username/develop ブランチを持つ</li>
+          <ul>
+            <li>feature切るような機能でもないちょっとした修正</li>
+            <li>ただdevelopにはpushしたくないとき</li>
+            <ul>
+              <li>developは基本いつでもrelease可能なものしかない</li>
+            </ul>
+            <li>デザインはできたけどJSの振舞を実装してないときとか…</li>
+          </ul>
+        </ul>
+        </section>
+
+        <section>
+        <h1>Merge Request</h1>
+        <h3>(ゆるふわ)</h3>
+        </section>
+
+        <section>
+        <h2>他の人の担当している部分を修正するときはMerge Requestする</h2>
+        </section>
+
+        <section>
+        <h1>Merge Request?</h1>
+        </section>
+
+        <section>
+        <h2>Merge Request</h2>
+        <ul>
+          <li>GitLabの機能のひとつ</li>
+          <li>GitHubでいうPull Request</li>
+          <ul>
+            <li>ちょっとこの変更とりこんでよ</li>
+            <li>って感じで相手にpullをリクエストする</li>
+            <li>パッチを送るようなもの</li>
+          </ul>
+        </ul>
+        </section>
+
+        <section>
+        <h1>GitLab??</h1>
+        </section>
+
+        <section>
+        <h2>GitLab</h2>
+        <ul>
+          <li>githubのクローン</li>
+          <li>だいたいの機能がそろってる</li>
+          <li>毎月22日に定期アップデート</li>
+          <ul>
+            <li>現在v3.0.2</li>
+            <li>すさまじい開発速度</li>
+          </ul>
+        </ul>
+        <img src="http://gyazo.com/095f40ceb7de56e460aacf4202f308f3.png?1351153423" alt="" />
+        </section>
+
+        <section>
+        <h1>で</h1>
+        </section>
+
+        <section>
+        <h2>なんでMerge Request</h2>
+        <ul>
+          <li>担当者に対するおうかがい</li>
+          <ul>
+            <li>ここ直したけどあってる?</li>
+          </ul>
+          <li>コードレビュー</li>
+          <ul>
+            <li>コード知識の共有</li>
+            <li>設計</li>
+          </ul>
+        </ul>
+        </section>
+
+        <section>
+        <h2>ただし、ゆるふわ</h2>
+        <p class="fragment">結構 Merge Request しないときもある</p>
+        <p class="fragment">わりと気分</p>
+        <p class="fragment">またはお互い実装部分が違いすぎてやる気力と時間がない、とも言う</p>
+        </section>
+
+        <section>
+        <h2>ゆえに失敗もおこる</h2>
+        <p class="fragment">結構見落としたままリリースしたり</p>
+        <p class="fragment">お互いボーンヘッドしたりしている</p>
+        </section>
+
+        <section>
+        <img src="http://gyazo.com/a7869ec521f1df5121609c82c2faf1a4.png?1351152417" alt="" />
+        <img src="http://gyazo.com/81b595c14ade71ad79f0cecb2da59204.png?1351152498" alt="" />
+        </section>
+
+        <section>
+        <img src="http://gyazo.com/d7543d8a9c4566b070ea6cb9b5bd5547.png?1351152600" alt="" />
+        </section>
+
+        <section>
+        <h2>GitLabにはForkがない</h2>
+        <ul>
+          <li>feature/hoge -> feature/hoge にリクエスト不可</li>
+          <li>必ずブランチを作成する必要がある</li>
+          <li>共同開発に不便</li>
+          <li>feature/hoge -> working/okada/feature/hogeブランチを作成してそこからMerge Request</li>
+        </ul>
+        </section>
+
+        <section>
+        <h1>デザイナーズリリース</h1>
+        </section>
+
+        <section>
+        <h2>デザイナさんにもGitを押し付け</h2>
+        <h2>デプロイ作業も一任</h2>
+        <ul>
+          <li>samba x Git クライアントで割と使いこなせるっぽい</li>
+          <li class="fragment">過去2名はわりと使いこなしている</li>
+        </ul>
+        </section>
+
+        <section>
+        <h2>デプロイ</h2>
+        <p>fabricでコマンド3発</p>
+        <pre><code>fab release:open
+fab production deploy_web_server:apache=reload deploy_media_server
+fab release close</code></pre>
+        <ul>
+          <li>git release open実行</li>
+          <li>Webサーバとメディアサーバのリポジトリを最新リリースブランチに更新</li>
+          <li>apacheを再起動</li>
+          <li>git release close実行</li>
+        </ul>
+        </section>
+
+        <section>
+        <h2>デプロイ</h2>
+        <p>Web ツール</p>
+        <ul>
+          <li>commit / pull / push / release をブラウザで行う</li>
+          <li>みーやんさんとかりょーたさんが主にこちらを利用</li>
+        </ul>
+        <img src="http://gyazo.com/b96d48871b18882243195ea9a10e5217.png?1351153603" alt="" />
+        </section>
+
+        <section>
+        <h2>まとめ</h2>
+        <ul>
+          <li>git-dailyとGitLabをメインに利用</li>
+          <ul>
+            <li>developがメインブランチ</li>
+            <li>大きな機能を開発するときはfeatureを切る</li>
+            <li>リリース時にはreleaseブランチを切る</li>
+            <li>大きな機能でもないときはdevelopに直接マージする</li>
+            <li>他の人の担当している部分を修正するときはMergeRequest</li>
+            <li>それぞれ working/username/develop を持つ</li>
+            <li>デザイン修正などはデザイナさんが直接リリース</li>
+          </ul>
+        </ul>
+        </section>
+
+        <section>
+        <h1>おわり</h1>
+        </section>
+
+      </div>
+
+
+    </div>
+
+		<script src="reveal-js/lib/js/head.min.js"></script>
+		<script src="reveal-js/js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal-js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal-js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal-js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal-js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'reveal-js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+  </body>
+</html>
+
