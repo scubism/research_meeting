@@ -171,7 +171,7 @@ return _49;
 }
 _4a=_4a.replace(/"/g,"&quot;");
 url=_2e(url,"*_");
-var _4e="<img src=\""+url+"\" alt=\""+_4a+"\"";
+var _4e="<img src=\""+url+"\" style=\"width:100%\" alt=\""+_4a+"\"";
 _4d=_4d.replace(/"/g,"&quot;");
 _4d=_2e(_4d,"*_");
 _4e+=" title=\""+_4d+"\"";

@@ -1,161 +1,134 @@
-# baas,meteor,データ同期
-naoki 2012/11/08
+# RESTとデータ同期
+naoki 2012/11/15
 
 !
 
-# 会社公式のgithub作りました．
+## middle(通信)を介したbackendとfrontendの分離
 
- - https://github.com/organizations/scubism
- - githubから一度folkしてきて色々と改変
- - 勉強会で使ったり．．
- - https://github.com/scubism/research_meeting
- - 外部公開に使ったり．．（未定）
- - そもそも使いやすい．wikiとかpull requestとか．
+- 固く書きたい部分を守る
+- テスタブル
+- 分離の方針になる
+- パフォーマンス、整合性などはバックエンドで担保
+- apiによる
 
-!
-
-# 皆さんのgithubアカウント下さい．
-
- - yammerなぞに書いてくれれば入れておきます．
-
-!
-# さてgithub + gitlabを使った運用方法を考えようと思った
-
- - 作ったのはいいけれどどこにどーやって？
- - pull requestはどう活用する？
- - 
- - 触っていい部分、触らない部分はどう決める？？
-
-!
-
-# 考える基準を考える
- - ソースの分離、構造化
- - そもそもどんな「基準」？
- - プログラムの目的みたいなものに立ち返ってみる
- 
-  - そこから「テスト」や「構造化」、「パフォーマンス」etc
- が出てくるのが望ましい
-  - どれが重要なのかが分かる．
- 
-
-!
-# じゃぁ僕らのプログラムの目的とは？
-
-!
-
-# バグつぶし？
-# パフォーマンス？
-# 顧客満足？
-# ユーザ体験？
-
-どれも最終目標ではない．
- 
-
-!
-
-# 成長？
- - まるで○○会みたいだけれどw
- - 規模の拡大は分かりやすい目標？
- - とはいえ僕らはもっといい言葉を知っている．．
-
-!
-
-# スケール!!
-
-!
-
-# 開発をスケールさせよう!!
-
- - 生産性を上げる．
-   - 質
-     - バグ
-     - パフォーマンス
-   - 量
-     - 時間
-     - 人
-
- - 質も量も結局生産性に行き着く 
-
-!
-
-## 補足
-
- - 本来はコストセンターとしての側面だけではない．
- - しかし、現状はこちらが重要
- - コストを下げてから別軸（「新規機能」）に移ろう！
-
-!
-
-## 開発をスケールさせよう！！
-
- - バグを出さない
- - パフォーマンスを下げない
-
-!
-
-## 開発をスケールさせよう！！
-
- - バグを**書かない**
- - パフォーマンスが悪いコードを**書かない**
- - **そもそも書かない**
-
-!
-
-# なるべく書かない、書かせない
- 
-  - バグが出やすい部分
-  - パフォーマンスのネックとなる部分
-  - 時間をかけて**分離**と**隠蔽**
-
-!
-
-## 階層的分離
- 
- - エンジニアによって得手不得手
- - やるべきレイヤーにのみ注力すべき!!
- - 現状はほぼ案件レベルでのレイヤーのみ．
- - 知識の共有もなされていない．
+- （skではajax目的で開始)
 
 
 !
 
-## 階層的分離
-![1.jpg](1.jpg)
+## イメージ
+
+![イメージ](1.jpg)
 
 !
 
-## 隠蔽!!
+## skの例
 
-- ようやくgitの話
-- submodule?
-- pull requestによるコードレビュー?
+![SK](2.jpg)
 
 !
 
-## 隠蔽!!
+## skの例(コード)
 
-![3.jpg](3.jpg)
+- jsの場合のコード
+
+
+```coffeescript
+class Event extends utils.model.Model
+    @endpoint: '/event/student/api'
+    @modelname 'storage'
+
+@events = app.model.Event.observableArray([])
+
+@events {name__icontains: 'test'}, (val)=>
+	console.log 'complete'
+```
+- iosの場合のコード
+
+
+```objective-c
+
+@implementation Event (sync)
++ (NSString *)restName{
+    return @"storage";
+}
+
++ (NSString *)restAppName{
+    return @"event/student";
+}
+@end
+
+[Event sync_filter:@{@"name__icontains": @"test"} options:nil complete:handler];
+```
 
 !
 
-## 隠蔽!!
 
-- 矢印の向きが依存関係
-- この向きではソースの改変にコードレビューが入るようにしたい！
-- gitlabではmerge requestとブランチレベルでの権限付与でいける
+## skでの教訓
 
-!
+- RESTの自由度を上げすぎた
+- django本体のtemplateと相性が悪い
+- 特にvalidation
+- authも自由すぎた
 
-## 隠蔽!!
+- middle周りの設計が「書きながら」すぎた．orz．
 
-![2.jpg](2.jpg)
-
-!
-
-# 開発のスケーリング！
-
-# by 階層的モジュール化とGitを使った隠蔽
 
 !
 
- 
+## skでの教訓(Ajax部分)
+
+- スキーマやvalidationなどは固く書きたい
+	- validationが二カ所に．
+- SEO部分は静的
+- クライアントサイドでのエラー検知
+- ファイル分割などはdjango機能
+
+!
+
+## ここまでの考察
+
+- RESTは設計によってまちまち
+- どこまでをバックエンドとするのか
+- 通信にはhttpを使う？
+- （制限されたinterfaceだったら何でも）
+
+!
+
+## db同期
+
+- iosの場合だと、デバイス上にもdb
+- 透過的にアクセスできるAPI
+- 裏で同期
+	- updated_dateを使った同期
+
+- 例
+
+```objective-c
+[Event filter:@{@"name__icontains": @"test"} options:nil complete:handler];
+[Event sync_filter:@{@"name__icontains": @"test"} options:nil complete:handler];
+```
+
+!
+
+## db同期
+
+![SK](3.jpg)
+
+!
+
+## db同期のアルゴリズム
+
+![diagram](https://dl.dropbox.com/u/151205/sync_diagram.jpg)
+
+!
+
+## 教訓
+
+- APIの自由度を上げない
+	- 分かりやすい
+	- パフォーマンスの担保
+
+!
+
+## 関係ありそうな話題
