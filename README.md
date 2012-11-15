@@ -11,7 +11,7 @@
 その際、ファイル間のリンクに関しては、相対リンクで書いておいた方が良いかと思います．
 
 htmlやpdfで書いた場合はgh-pagesブランチの方にマージしておくと（逆のマージはしないで下さい．じゃまなのでw）、以下から参照できます．
-<http://scubism-dev.github.com/research_meeting/>
+<http://scubism.github.com/research_meeting/>
 
 例：
-<http://scubism-dev.github.com/research_meeting/moqada/git-workflow/>
+<http://scubism.github.com/research_meeting/moqada/git-workflow/>
