@@ -80,7 +80,7 @@ Present.prevSlide = function() {
 };
 
 $.ajax({
-  url: 'presentation.md',
+  url: 'index.md',
   success: function(data) {
     if (data.length>0) {
       var converted = Present.converter.makeHtml(data);
