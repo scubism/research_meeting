@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="css/reset.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="shortcut icon" href="css/favicon.png" />
+    <link rel="apple-touch-icon" href="css/apple-touch-icon.png" />
+    <!-- Code Prettifier: -->
+<link href="css/highlight.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    <link href="css/style.css" rel="stylesheet" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,800italic,300,400,800' rel='stylesheet' type='text/css'>    
+
+
+  </head>
+
+  <body>
+  <div class="fallback-message">
+  <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+  <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+  </div>
+    <div id="impress">
+    <div class='step' >
+    
+<h1>skでのajax</h1>
+
+<p>naoki 2012/11/21</p>
+</div>
+      <div class='step' >
+    
+<h2>djangoの短所</h2>
+
+<ul>
+<li>ふるき良きRequest and Response</li>
+<li>jsでのレンダリングに向かない</li>
+<li>フルサーバレンダリング</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>skでのajax</h2>
+
+<ul>
+<li>RESTの設計</li>
+<li>(疑似)透過的API</li>
+<li>knockout経由でのテンプレートバインディング</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>RESTの設計</h2>
+
+<ul>
+<li>django-rest-framework
+
+<ul>
+<li><a href="http://django-rest-framework.org/">http://django-rest-framework.org/</a></li>
+</ul></li>
+<li>django-piston
+
+<ul>
+<li><a href="https://bitbucket.org/jespern/django-piston/wiki/Home">https://bitbucket.org/jespern/django-piston/wiki/Home</a></li>
+</ul></li>
+<li>django-tastypie
+
+<ul>
+<li><a href="https://github.com/toastdriven/django-tastypie">https://github.com/toastdriven/django-tastypie</a></li>
+</ul></li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>RESTの設計</h2>
+
+<p>これらは使わず自前実装</p>
+
+<ul>
+<li>djangoのserializerがバカみたいに遅い</li>
+<li>skのauthはかなりオレオレ</li>
+<li>authとserializeをコントロールしたかった</li>
+<li>のは建前で自分で詳しく知りたかった</li>
+<li>いろいろと設計を変えてみたかった</li>
+<li>REST越しでRPCをやってみたかった</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>RESTの設計(1)</h2>
+
+<ul>
+<li>endpoint</li>
+</ul>
+<pre><code class='prettyprint js'>'/list/(?P<modelname>\w+)/$'
+'/detail/(?P<modelname>\w+)/(?P<modelpk>\d+)/$'
+'/create/(?P<modelname>\w+)/$'
+'/update/(?P<modelname>\w+)/(?P<modelpk>\d+)/$'
+'/delete/(?P<modelname>\w+)/(?P<modelpk>\d+)/$'
+</code></pre><pre><code class='prettyprint js'>'/bulk_update/(?P<modelname>\w+)/$'
+'/get_or_create/(?P<modelname>\w+)/$'
+</code></pre><pre><code class='prettyprint js'>'/custom/(?P<modelname>\w+)/(?P<funcname>\w+)/$'
+'/call/(?P<modelname>\w+)/(?P<modelpk>\d+)/(?P<funcname>\w+)/$'
+</code></pre></div>
+      <div class='step' >
+    
+<h2>RESTの設計(2)</h2>
+
+<ul>
+<li>resource</li>
+</ul>
+<pre><code class='prettyprint python'>class EventReservedRecipientResource(Resource):
+    # モデルとの連結
+    model = EventReservedRecipient
+
+    # 展開するかどうか
+    modelklss = {
+        'recipient': UserProfile,
+        'event': Event
+    }
+
+    # authなどjsレンダリング前の処理
+    @classmethod
+    def postprocess_query(cls, request, query, modelname, func, resource, temp, option=None):
+        if not request.euser:
+            raise SKAuthError(request, USER_TYPE_ENTERPRISE)
+        temp['sender'] = request.user.up()
+        return temp
+
+</code></pre></div>
+      <div class='step' >
+    
+<h2>(疑似)透過的API</h2>
+
+<p>django本体のORMとほぼ同じように使えるように設計．</p>
+<pre><code class='prettyprint python'>Event.objects.filter(name__contains='test')
+</code></pre>
+<p>js側のライブラリ</p>
+<pre><code class='prettyprint coffeescript'>Event.list {name__contains:'test'}
+</code></pre>
+<p>obj-cのライブラリ</p>
+<pre><code class='prettyprint objective-c'>Event.sync_filter(@{@"name__contains": @"test"}, nil);
+</code></pre>
+<p>node.jsならもっと綺麗に．．meteorとか．</p>
+</div>
+      <div class='step' >
+    
+<h2>knockout経由でのテンプレートバインディング</h2>
+
+<ul>
+<li>ko.observableArrayを継承したものを返す．</li>
+</ul>
+<pre><code class='prettyprint javascript'>events = Event.observableArray([])
+events.list {name__contains:'test'}, (val)=>
+</code></pre><pre><code class='prettyprint html'><div data-bind="foreach: events">
+    <span data-bind="text: name"></span>
+</div>
+</code></pre>
+<ul>
+<li>これでサーバ側フェッチからレンダリングの間のバインディングを全部自動化</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>反省点</h2>
+
+<ul>
+<li>SEOで邪魔</li>
+<li>クライアント側でのレンダリングは重い</li>
+<li>クライアント側でのエラー通知</li>
+<li>formと相性が悪い</li>
+</ul>
+
+<p>これらの問題を解決しないと実用性が薄い</p>
+</div>
+      <div class='step' >
+    
+<h2>考えられる解決策</h2>
+
+<ul>
+<li>SEOで邪魔
+
+<ul>
+<li>無視(SEO使わないところだけに使う)</li>
+<li>ヘッドレスブラウザでサーバ側レンダリング？</li>
+</ul></li>
+<li>クライアント側でのレンダリングは重い
+
+<ul>
+<li>一部サーバレンダリング</li>
+<li>再レンダリングを避ける</li>
+<li>CSSの最適化</li>
+</ul></li>
+<li>クライアント側でのエラー通知
+
+<ul>
+<li>ajax経由で通知</li>
+</ul></li>
+<li>formと相性が悪い
+
+<ul>
+<li>ここは静的にレンダリングすべきか？？</li>
+<li>validation情報などはサーバ側から送るべき</li>
+</ul></li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>連絡事項</h2>
+</div>
+      <div class='step' >
+    
+<h2>個別勉強会</h2>
+
+<ul>
+<li>いくつか個別のショートスパンの勉強会をやろうと考えています．</li>
+<li><p>意見募集中</p></li>
+<li><p>node.js</p></li>
+<li><p>ECフレームワーク</p></li>
+<li><p>データベース（データマイニング）</p></li>
+</ul>
+
+      </div>
+    <script src="js/impress.js"></script>
+    <script>impress().init();</script>
+  </body>
+</html>
+    
